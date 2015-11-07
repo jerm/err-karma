@@ -3,18 +3,18 @@ from datetime import datetime
 import re
 import logging
 
-log = logging.getLogger(name='errbot.plugins.Kudos')
+log = logging.getLogger(name='errbot.plugins.Karma')
 
 
-class Kudos(BotPlugin):
+class Karma(BotPlugin):
 
-    def update_kudos(self, username, count=1):
+    def update_karma(self, username, count=1):
         ''' Updates db with current count '''
 
         username = str(username)
 
         try:
-            old_count = self.shelf.get(username).get('kudos', 0)
+            old_count = self.shelf.get(username).get('karma', 0)
             new_count = old_count + count
         except AttributeError:
             self.shelf[username] = {}
@@ -24,25 +24,25 @@ class Kudos(BotPlugin):
 
         self.shelf[username] = {
             'time': datetime.now(),
-            'kudos': new_count,
+            'karma': new_count,
         }
         self.shelf.sync()
 
     @re_botcmd(pattern=r'^[a-z0-9]+\+\+$', prefixed=False, flags=re.IGNORECASE)
-    def give_kudos(self, msg, match):
-        ''' This gives kudos '''
+    def give_karma(self, msg, match):
+        ''' This gives karma '''
         if match:
             username = match.group(0).rstrip('++')
-            self.update_kudos(username)
+            self.update_karma(username)
 
             self.send(msg.frm,
-                      'kudos updated for {}'.format(username),
+                      'karma updated for {}'.format(username),
                       message_type=msg.type,
                       in_reply_to=msg,
                       groupchat_nick_reply=True)
 
     @re_botcmd(pattern=r'^[a-z0-9]+--$', prefixed=False, flags=re.IGNORECASE)
-    def remove_kudos(self, msg, match):
+    def remove_karma(self, msg, match):
         ''' This removes a kudo '''
         self.send(msg.frm,
                   'Seriously...?',
@@ -51,7 +51,7 @@ class Kudos(BotPlugin):
                   groupchat_nick_reply=True)
 
     @botcmd(admin_only=True)
-    def kudos_delete_entries(self, msg, args):
+    def karma_delete_entries(self, msg, args):
         ''' Deletes all entries for a user '''
         username = str(args)
 
@@ -68,16 +68,16 @@ class Kudos(BotPlugin):
                   groupchat_nick_reply=True)
 
     @botcmd
-    def kudos_list(self, msg, args):
+    def karma_list(self, msg, args):
         ''' Returns a list of users that have a kudo '''
         user_list = []
         for user in self.shelf.keys():
-            user_list.append(user)
+            user_list.append("%s: %d" % (user, get(user).get('karma'))
 
         if user_list == []:
             response = 'No users'
         else:
-            response = ', '.join(user_list)
+            response = '\n'.join(user_list)
 
         self.send(msg.frm,
                   response,
@@ -86,10 +86,10 @@ class Kudos(BotPlugin):
                   groupchat_nick_reply=True)
 
     @botcmd
-    def kudos(self, msg, args):
-        ''' A way to see your kudos stats
+    def karma(self, msg, args):
+        ''' A way to see your karma stats
             Example:
-                !kudos <username>
+                !karma <username>
         '''
         username = str(args)
 
@@ -102,7 +102,7 @@ class Kudos(BotPlugin):
             return
 
         try:
-            count = self.shelf.get(username).get('kudos')
+            count = self.shelf.get(username).get('karma')
         except (TypeError, NameError, AttributeError):
             count = 0
 

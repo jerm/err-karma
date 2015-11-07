@@ -10,7 +10,7 @@ None
 Installation
 ---
 ```
-!repos install https://github.com/sijis/err-kudos.git
+!repos install https://github.com/jerm/err-karma.git
 ```
 
 Usage
@@ -20,5 +20,5 @@ Simple example usage
 ```
 $ sijis++
 
-!kudos list
+!karma list
 ```

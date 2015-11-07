@@ -1,6 +1,6 @@
 [Core]
-Name = Kudos
-Module = kudos
+Name = Karma
+Module = karma
 
 [Python]
 Version = 2+
