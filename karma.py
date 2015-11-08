@@ -20,7 +20,7 @@ class Karma(BotPlugin):
             self.shelf[username] = {}
             new_count = count
 
-        log.debug('new kudo count is {}'.format(new_count))
+        log.debug('new karma count is {}'.format(new_count))
 
         self.shelf[username] = {
             'time': datetime.now(),
@@ -36,14 +36,14 @@ class Karma(BotPlugin):
             self.update_karma(username)
 
             self.send(msg.frm,
-                      'karma updated for {}'.format(username),
+                    'karma -- {}: {}'.format(username,self.shelf.get(username).get('karma')),
                       message_type=msg.type,
                       in_reply_to=msg,
                       groupchat_nick_reply=True)
 
     @re_botcmd(pattern=r'^[a-z0-9]+--$', prefixed=False, flags=re.IGNORECASE)
     def remove_karma(self, msg, match):
-        ''' This removes a kudo '''
+        ''' This removes a karma '''
         self.send(msg.frm,
                   'Seriously...?',
                   message_type=msg.type,
@@ -69,10 +69,10 @@ class Karma(BotPlugin):
 
     @botcmd
     def karma_list(self, msg, args):
-        ''' Returns a list of users that have a kudo '''
+        ''' Returns a list of users that have a karma '''
         user_list = []
         for user in self.shelf.keys():
-            user_list.append("%s: %d" % (user, get(user).get('karma'))
+            user_list.append("%s: %d" % (user, self.shelf.get(user).get('karma')))
 
         if user_list == []:
             response = 'No users'
@@ -107,7 +107,7 @@ class Karma(BotPlugin):
             count = 0
 
         self.send(msg.frm,
-                  '{} has {} kudo points.'.format(username, count),
+                  '{} has {} karma points.'.format(username, count),
                   message_type=msg.type,
                   in_reply_to=msg,
                   groupchat_nick_reply=True)
