@@ -18,7 +18,11 @@ Usage
 Simple example usage
 
 ```
-$ sijis++
+> jermops++
 
-!karma list
+> jermops--
+
+> !karma list
+
+> !karma delete_entries jermops
 ```
